@@ -42,7 +42,7 @@ class MovieController extends Controller
 
         $movies = new Movies();
 
-        if ($request->has('title')){
+        if ($request->has('title') && $request->input('title') !== ""){
             $result = $movies->getWihTitle(
                                 $request->input('title'),
                                 $rating,

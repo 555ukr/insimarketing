@@ -26,6 +26,7 @@ class MovieController extends Controller
 
         $validator = Validator::make($request->all(), [
             'title' => 'max:124',
+            'type'  => 'in:short,movie,tvMovie,video,tvEpisode,tvSeries,tvShort,tvMiniSeries,tvSpecial,videoGame',
             'rating' => 'numeric',
             'page' => 'numeric',
             'order' => 'in:asc,desc'
@@ -37,8 +38,9 @@ class MovieController extends Controller
 
         $rating = $request->input('rating', 0);
         // 10 movies per page
-        $skip =  $request->input('rating', 0) * 10;
+        $skip =  $request->input('page', 0) * 10;
         $order = $request->input('order', 'asc');
+        $type = $request->input('type', "short");
 
         $movies = new Movies();
 
@@ -47,18 +49,23 @@ class MovieController extends Controller
                                 $request->input('title'),
                                 $rating,
                                 $skip,
-                                $order
+                                $order,
+                                $type
             );
         } else {
-            $result = $movies->getWithRatingOnly($rating, $skip, $order);
+            $result = $movies->getWithRatingTypeOnly($rating, $skip, $order, $type);
         }
 
 
-        return $result->map(function ($item, $key){
-                    $row = collect($item);
-                    $row['rating'] = $row['rating']['averageRating'];
-                    $row['isAdult'] = $row['isAdult'] ? 'yes' : 'no';
-                    return $row;
-        });
+        return [    "metadata" => [
+                            'allRowsCounter' => $movies->allRowsCounter,
+                        ],
+                    "data" => $result->map(function ($item, $key){
+                            $row = collect($item);
+                            $row['rating'] = $row['rating']['averageRating'];
+                            $row['isAdult'] = $row['isAdult'] ? 'yes' : 'no';
+                            return $row;
+                        })
+                ];
     }
 }

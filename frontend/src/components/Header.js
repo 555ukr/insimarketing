@@ -5,11 +5,17 @@ import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
-import Input from '@material-ui/core/Input';
 import CallMadeIcon from '@material-ui/icons/CallMade';
+import PropTypes from 'prop-types';
+
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    height: '80px',
     flexGrow: 1,
   },
   title: {
@@ -32,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(1),
       width: 'auto',
     },
+    height: '46px',
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
@@ -58,6 +65,18 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+   typeFormat: {
+     backgroundColor: 'rgba(255, 255, 255, 0.15)',
+      borderRadius: '5px',
+      width: '140px',
+   },
+   input: {
+     marginTop: '5px',
+   }
 }));
 
 export default function SearchAppBar(props) {
@@ -70,11 +89,34 @@ export default function SearchAppBar(props) {
           <Typography className={classes.title} variant="h6" noWrap>
             InsideMarketing
           </Typography>
+          <div className={classes.typeFormat}>
+          <FormControl className={classes.formControl}>
+                {/* <InputLabel htmlFor="grouped-select">Type</InputLabel> */}
+                <Select onChange={(e) => props.onChangeType(e.target.value)}
+                       defaultValue="" id="grouped-select">
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+
+                  <MenuItem value={"short"}>Short</MenuItem>
+                  <MenuItem value={"movie"}>Movie</MenuItem>
+                  <MenuItem value={"tvMovie"}>TV movie</MenuItem>
+                  <MenuItem value={"video"}>Video</MenuItem>
+                  <MenuItem value={"tvEpisode"}>TV episode</MenuItem>
+                  <MenuItem value={"tvSeries"}>TV series</MenuItem>
+                  <MenuItem value={"tvShort"}>TV short</MenuItem>
+                  <MenuItem value={"tvMiniSeries"}>TV MiniSeries</MenuItem>
+                  <MenuItem value={"tvSpecial"}>TV Special</MenuItem>
+                  <MenuItem value={"videoGame"}>Video Game</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <CallMadeIcon />
               </div>
-            <InputBase
+            <InputBase 
+              className={classes.input}
               onChange={(e) => (props.onRatingSearchChange(e.target.value))}
               placeholder="Rating…"
               type="number"
@@ -89,6 +131,7 @@ export default function SearchAppBar(props) {
               <SearchIcon />
             </div>
             <InputBase
+            className={classes.input}
             onChange={ (e) => (props.onTitleSearchChnage(e.target.value) ) }
               placeholder="Search…"
               classes={{
@@ -102,4 +145,11 @@ export default function SearchAppBar(props) {
       </AppBar>
     </div>
   );
+}
+
+
+SearchAppBar.propTypes = {
+  onRatingSearchChange: PropTypes.func,
+  onTitleSearchChnage: PropTypes.func,
+  onChangeType: PropTypes.func,
 }

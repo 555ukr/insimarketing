@@ -4,38 +4,48 @@ import axios from 'axios'
 import Header from './components/Header';
 import MovieTable from './components/MovieTable';
 
-// const rows = [];
-
 const Dashboard = () => {
     const [rateSearch, setRateSearch] = useState(0);
     const [titleSeach, setTitleSearch] = useState("");
+    const [allRowsCount, setAllRowsCount] = useState(0);
+    const [pageCurrent, setPageCurrent] = useState(0);
+    const [typeSearch, setTypeSerach] = useState("short");
     const [rows, setRows] = useState([]);
 
     useEffect( () => {
-        apiMovieReuest({ rating: rateSearch, title: titleSeach })
-    }, [rateSearch, titleSeach]);
+        apiMovieReuest()
+    }, [rateSearch, titleSeach, typeSearch]);
 
-    const apiMovieReuest = (param) => {
+    const apiMovieReuest = () => {
         let apiUrl = 'http://127.0.0.1:8000/api/movie';
         axios.get(apiUrl, 
-            { params:  param })
+            { params:  { rating: rateSearch,
+                         title: titleSeach,
+                         page: pageCurrent,
+                         type: typeSearch,
+                         } })
             .then((resp) => {
-                const movies = resp.data;
+                const movies = resp.data.data;
+                setAllRowsCount(resp.data.metadata.allRowsCounter);
                 setRows(movies);
           }).catch(e => (console.log(e)));
     }
 
     const handlePagination = (pagination) => {
         console.log(pagination);
+        setPageCurrent(pagination.page);
+        apiMovieReuest();
     }
 
     return (
         <div>
             <Header onRatingSearchChange={setRateSearch}
-                    onTitleSearchChnage={setTitleSearch} 
+                    onTitleSearchChnage={setTitleSearch}
+                    onChangeType={setTypeSerach} 
             />
             <MovieTable movieRows={rows}
                         onPaginationChange={handlePagination}
+                        allRowsCount={allRowsCount}
             />
         </div>
     )

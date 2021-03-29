@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
+import PropTypes from 'prop-types';
 
 const columns = [
   { field: 'tconst', headerName: 'ID', width: 130 },
@@ -13,16 +14,22 @@ const columns = [
 ];
 
 
-
 export default function DataTable(props) {
   return (
     <div style={{ height: '700px', width: '100%' }}>
       <DataGrid rows={props.movieRows}
                 columns={columns}
                 pageSize={10}
-                rowCount={100}
+                rowCount={props.allRowsCount}
                 onPageChange={(GridPageChangeParams) => (props.onPaginationChange(GridPageChangeParams))}
-                paginationMode="server" />
+                paginationMode="server" 
+                />
     </div>
   );
+}
+
+DataTable.propTypes = {
+  allRowsCount: PropTypes.number,
+  movieRows: PropTypes.array,
+  onPaginationChange: PropTypes.func,
 }

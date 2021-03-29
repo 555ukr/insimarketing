@@ -10,7 +10,7 @@ class MovieParser implements ParserContract {
     private $path = "../initdb/data.tsv";
 
     private $movies_type = [
-        'short', 'movie', 'tvMovie', 'video', 
+        'short', 'movie', 'tvMovie', 'video',
         'tvEpisode', 'tvSeries', 'tvShort',
         'tvMiniSeries', 'tvSpecial', 'videoGame'
     ];
@@ -19,9 +19,9 @@ class MovieParser implements ParserContract {
         $handle = fopen($this->path, "r");
         if ($handle) {
             while (($line = fgets($handle)) !== false) {
-                
+
                 $lineArray = preg_split("/[\t]/", $line);
-                
+
                 $lineArray = $this->cleanDataLine($lineArray);
 
                 if ($this->validate($lineArray) ){
@@ -41,7 +41,7 @@ class MovieParser implements ParserContract {
             fclose($handle);
         } else {
             Log::error("Data.tsv is not readeable");
-        } 
+        }
     }
 
     private function cleanDataLine(array $lineArray) {
@@ -51,7 +51,7 @@ class MovieParser implements ParserContract {
                 $elm = NULL;
             }
         }
-        
+
         return $lineArray;
     }
 
@@ -61,7 +61,7 @@ class MovieParser implements ParserContract {
             return false;
         }
 
-        if (!in_array($lineFile[1], $movies_type)){
+        if (!in_array($lineFile[1], $this->movies_type)){
             Log::error("Wrong enum |{$lineFile[1]}|");
             return false;
         }

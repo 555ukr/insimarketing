@@ -17,7 +17,7 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        $movie = Movies::where('tconst', $id)->first();
+        $movie = Movies::with('rating')->where('tconst', $id)->first();
 
         return response()->json($movie) ;
     }

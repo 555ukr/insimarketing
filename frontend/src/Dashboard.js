@@ -17,7 +17,7 @@ const Dashboard = () => {
     }, [rateSearch, titleSeach, typeSearch]);
 
     const apiMovieReuest = () => {
-        let apiUrl = 'http://127.0.0.1:8000/api/movie';
+        let apiUrl = 'http://localhost:8000/api/movie';
         axios.get(apiUrl, 
             { params:  { rating: rateSearch,
                          title: titleSeach,
